@@ -1,0 +1,54 @@
+{% extends 'citas/base.html' %}
+
+{% block title %}Inicio - Sistema de Gestión de Citas{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4">
+    <h1 class="display-5">Sistema de Gestión de Citas</h1>
+    <p class="lead">Bienvenido al sistema.</p>
+</div>
+
+{% if user.is_authenticated %}
+
+<div class="alert alert-success text-center">
+    Sesión iniciada como: <strong>{{ user.username }}</strong>
+</div>
+
+<div class="text-center mb-4">
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            Cerrar sesión
+        </button>
+    </form>
+</div>
+
+{% else %}
+
+<div class="text-center mb-4">
+    <a href="{% url 'login' %}" class="btn btn-primary">
+        Iniciar sesión
+    </a>
+
+    <a href="{% url 'registro' %}" class="btn btn-secondary">
+        Registrarse
+    </a>
+</div>
+
+{% endif %}
+
+<h2 class="mb-3">Gestión de citas</h2>
+
+<div class="list-group">
+    <a href="{% url 'clientes' %}" class="list-group-item list-group-item-action">
+        Clientes
+    </a>
+
+    <div class="list-group-item">Empleados</div>
+    <div class="list-group-item">Servicios</div>
+    <div class="list-group-item">Estados</div>
+    <div class="list-group-item">Citas</div>
+</div>
+
+{% endblock %}
