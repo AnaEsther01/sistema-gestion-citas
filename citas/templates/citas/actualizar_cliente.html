@@ -1,9 +1,2 @@
-{% extends 'citas/base.html' %}
-{% block content %}
-<div class="row justify-content-center"><div class="col-md-7"><div class="card"><div class="card-body">
-<h1 class="mb-4">Actualizar cliente</h1>
-<form method="post">{% csrf_token %}{{ formulario.as_p }}
-<button class="btn btn-primary" type="submit">Guardar cambios</button>
-<a class="btn btn-outline-secondary" href="{% url 'clientes' %}">Volver a clientes</a>
-</form></div></div></div></div>
-{% endblock %}
+{% extends 'citas/base.html' %}{% block title %}Actualizar cliente{% endblock %}{% block breadcrumb %}Clientes / Actualizar cliente{% endblock %}{% block content %}
+<a class="back-link" href="{% url 'clientes' %}">← Volver a clientes</a><div class="page-heading"><div><p class="eyebrow">DIRECTORIO DE CLIENTES</p><h1>Actualizar cliente</h1><p>La información correcta hace más fácil una buena atención.</p></div></div><div class="form-layout"><section class="panel form-panel"><div class="section-heading"><h2>Información personal</h2><span class="muted">* Obligatorio</span></div><form method="post">{% csrf_token %}{% include 'citas/_fields.html' %}<div class="form-actions"><button class="button" type="submit">Guardar cambios</button><a class="button secondary" href="{% url 'clientes' %}">Cancelar</a></div></form></section><aside class="form-aside"><span class="stat-icon"><svg><use href="#people"/></svg></span><h2>Un directorio<br>bien cuidado.</h2><p>Registra nombre y apellido. Puedes añadir datos de contacto para encontrar a cada cliente con facilidad.</p><p class="aside-note">Revisa la información antes de guardar los cambios.</p></aside></div>{% endblock %}

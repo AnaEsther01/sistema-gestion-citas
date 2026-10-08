@@ -1,54 +1,10 @@
-{% extends 'citas/base.html' %}
-
-{% block title %}Inicio - Sistema de Gestión de Citas{% endblock %}
-
-{% block content %}
-
-<div class="text-center mb-4">
-    <h1 class="display-5">Sistema de Gestión de Citas</h1>
-    <p class="lead">Bienvenido al sistema.</p>
-</div>
-
+{% extends 'citas/base.html' %}{% block content %}
 {% if user.is_authenticated %}
-
-<div class="alert alert-success text-center">
-    Sesión iniciada como: <strong>{{ user.username }}</strong>
-</div>
-
-<div class="text-center mb-4">
-    <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">
-            Cerrar sesión
-        </button>
-    </form>
-</div>
-
+<div class="page-heading"><div><p class="eyebrow">TU PANEL DE GESTIÓN</p><h1>Hola, {{ user.username }}<span class="title-dot">.</span></h1><p>Una vista general para comenzar tu día.</p></div><span class="date-label">{% now "d · m · Y" %}</span></div>
+<section class="welcome-banner"><div><span class="eyebrow">MÁS ORDEN, MENOS COMPLICACIONES</span><h2>Cada cliente,<br>en el lugar indicado.</h2><p>Consulta tu información y mantén los datos al día.</p><a class="button light" href="{% url 'crear_cliente' %}"><svg><use href="#plus"/></svg>Registrar cliente</a></div><div class="banner-art" aria-hidden="true"><div class="calendar-art"><div class="calendar-top"></div><div class="calendar-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>✓</span></div></div></section>
+<section class="stats" aria-label="Resumen del sistema"><article class="stat"><div><span>Clientes registrados</span><strong>{{ total_clientes }}</strong><a href="{% url 'clientes' %}">Ver directorio <span aria-hidden="true">↗</span></a></div><span class="stat-icon"><svg><use href="#people"/></svg></span></article><article class="stat"><div><span>Citas de hoy</span><strong>{{ citas_hoy }}</strong><small>Registros para {% now "d/m" %}</small></div><span class="stat-icon"><svg><use href="#calendar"/></svg></span></article><article class="stat"><div><span>Servicios</span><strong>{{ total_servicios }}</strong><small>En el catálogo del sistema</small></div><span class="stat-icon"><svg><use href="#service"/></svg></span></article></section>
+<div class="dashboard-grid"><section class="panel"><div class="section-heading"><h2>Últimos clientes</h2><a href="{% url 'clientes' %}">Ver todos ↗</a></div>{% for cliente in ultimos_clientes %}<a class="person-row" href="{% url 'actualizar_cliente' cliente.pk %}"><span class="avatar">{{ cliente.nombre|first|upper }}{{ cliente.apellido|first|upper }}</span><span><strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong><small>{{ cliente.correo|default:'Sin correo registrado' }}</small></span><svg class="row-arrow"><use href="#arrow"/></svg></a>{% empty %}<div class="empty"><h3>Tu directorio está por comenzar</h3><p>Registra tu primer cliente para verlo aquí.</p><a href="{% url 'crear_cliente' %}">Registrar cliente</a></div>{% endfor %}</section>
+<section class="panel"><div class="section-heading"><h2>Próximas citas</h2><span class="muted">Desde hoy</span></div>{% for cita in proximas_citas %}<div class="appointment"><time class="day" datetime="{{ cita.fecha|date:'Y-m-d' }}"><strong>{{ cita.fecha|date:'d' }}</strong>{{ cita.fecha|date:'M' }}</time><div><strong>{{ cita.cliente }}</strong><small>{{ cita.servicio }} · {{ cita.hora|time:'H:i' }}</small><span class="badge">{{ cita.estado }}</span></div></div>{% empty %}<div class="empty"><span class="empty-icon"><svg><use href="#calendar"/></svg></span><h3>Sin citas próximas</h3><p>Las citas registradas aparecerán aquí.</p></div>{% endfor %}{% if user.is_staff %}<a class="panel-bottom" href="{% url 'admin:citas_cita_changelist' %}">Gestionar citas en administración <span>↗</span></a>{% endif %}</section></div>
 {% else %}
-
-<div class="text-center mb-4">
-    <a href="{% url 'login' %}" class="btn btn-primary">
-        Iniciar sesión
-    </a>
-
-    <a href="{% url 'registro' %}" class="btn btn-secondary">
-        Registrarse
-    </a>
-</div>
-
-{% endif %}
-
-<h2 class="mb-3">Gestión de citas</h2>
-
-<div class="list-group">
-    <a href="{% url 'clientes' %}" class="list-group-item list-group-item-action">
-        Clientes
-    </a>
-
-    <div class="list-group-item">Empleados</div>
-    <div class="list-group-item">Servicios</div>
-    <div class="list-group-item">Estados</div>
-    <div class="list-group-item">Citas</div>
-</div>
-
-{% endblock %}
+<section class="landing"><div><p class="eyebrow">BIENVENIDO A TU ESPACIO DE GESTIÓN</p><h1>Más organización.<br><span>Mejor atención.</span></h1><p class="landing-copy">Un lugar para gestionar tus clientes y consultar las citas de tu equipo. Simple, claro y a tu alcance.</p><div class="actions"><a class="button" href="{% url 'login' %}">Iniciar sesión <svg><use href="#arrow"/></svg></a><a class="button secondary" href="{% url 'registro' %}">Crear cuenta</a></div><div class="landing-note"><svg><use href="#people"/></svg>Tu información, organizada en un solo espacio.</div></div><div class="landing-visual" aria-hidden="true"><div class="visual-label">CITAS / TU ESPACIO</div><div class="calendar-art"><div class="calendar-top"></div><div class="calendar-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>✓</span></div><p>Conecta tu día<br>con lo importante.</p></div></section>
+{% endif %}{% endblock %}

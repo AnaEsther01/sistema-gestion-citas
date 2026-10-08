@@ -1,11 +1,1 @@
-{% extends 'citas/base.html' %}
-{% block content %}
-<div class="card border-danger"><div class="card-body">
-<h1>Eliminar cliente</h1>
-<p>¿Está seguro de que desea eliminar a <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong>?</p>
-<p>También se eliminarán sus citas asociadas. Esta operación no se puede deshacer.</p>
-<form method="post">{% csrf_token %}
-<button class="btn btn-danger" type="submit">Sí, eliminar</button>
-<a class="btn btn-secondary" href="{% url 'clientes' %}">Cancelar</a>
-</form></div></div>
-{% endblock %}
+{% extends 'citas/base.html' %}{% block title %}Eliminar cliente{% endblock %}{% block breadcrumb %}Clientes / Eliminar{% endblock %}{% block content %}<a class="back-link" href="{% url 'clientes' %}">← Volver a clientes</a><section class="panel delete-panel"><span class="warning-icon" aria-hidden="true">!</span><p class="eyebrow">CONFIRMACIÓN DE ELIMINACIÓN</p><h1>¿Eliminar este cliente?</h1><p>Vas a eliminar a <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong> de tu directorio.</p><div class="delete-warning">También se eliminarán sus citas asociadas. Esta operación no se puede deshacer.</div><form method="post">{% csrf_token %}<div class="actions"><a class="button secondary" href="{% url 'clientes' %}">Cancelar</a><button class="button danger" type="submit">Sí, eliminar</button></div></form></section>{% endblock %}
