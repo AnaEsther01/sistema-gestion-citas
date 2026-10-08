@@ -4,15 +4,21 @@ Proyecto académico desarrollado con Python y Django. Base de datos configurada:
 
 ## Funciones implementadas
 - Registro, inicio y cierre de sesión.
+- Panel de inicio autenticado con cifras reales de clientes, citas del día y servicios, además de últimos clientes y próximas citas.
 - Consulta, creación, edición y eliminación de clientes con acceso autenticado.
+- Búsqueda de clientes por nombre, apellido, correo o teléfono.
+- Interfaz adaptable a distintas pantallas, con CSS local y una paleta de azules (#748cab, #3e5c76 y #1d2d44).
 - Validación de campos obligatorios y correo electrónico.
 - Administración de clientes, empleados, servicios, estados y citas desde `/admin/`.
-- Pruebas automatizadas de autenticación, CRUD y validaciones.
+- 10 pruebas automatizadas de autenticación, CRUD, validaciones, privacidad del panel y búsqueda.
+
+Las citas, empleados, servicios y estados se gestionan desde el administrador de Django. La agenda pública y la prevención de cruces de horario son mejoras futuras.
 
 ## Arquitectura MVT
 - Modelos: `citas/models.py` define las entidades y sus relaciones.
 - Vistas: `citas/views.py` procesa las solicitudes y los formularios.
 - Plantillas: `citas/templates/citas/` contiene la interfaz.
+- Estilos locales: `citas/static/citas/css/app.css` define el diseño visual.
 - Rutas: `citas/urls.py` y `proyecto/urls.py` conectan las páginas.
 - Formularios: `citas/forms.py` valida la entrada de clientes.
 - Migraciones: `citas/migrations/` permite crear las tablas.
@@ -58,11 +64,12 @@ Las pruebas necesitan permisos para crear y eliminar la base temporal `test_sist
 
 ## Demostración en el aula
 1. Iniciar el servidor de base de datos y el servidor Django.
-2. Iniciar sesión y abrir Clientes.
-3. Crear un cliente de prueba, consultarlo y editarlo.
-4. Mostrar el rechazo de un correo inválido o un nombre vacío.
-5. Eliminar el cliente de prueba y cerrar sesión.
-6. Explicar los modelos relacionados y mostrar su administración, si se solicita.
+2. Iniciar sesión y explicar los datos del panel de inicio.
+3. Abrir Clientes y mostrar la búsqueda.
+4. Crear un cliente de prueba, consultarlo y editarlo.
+5. Mostrar el rechazo de un correo inválido o un nombre vacío.
+6. Eliminar el cliente de prueba y cerrar sesión.
+7. Explicar los modelos relacionados y mostrar la administración de citas, si se solicita.
 
 ## Entrega
 Repositorio: https://github.com/AnaEsther01/sistema-gestion-citas
