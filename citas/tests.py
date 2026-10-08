@@ -55,6 +55,28 @@ class ValidacionFase4Tests(TestCase):
         self.assertTrue(Servicio.objects.filter(pk=servicio.pk).exists())
 
 
+class PanelYBusquedaTests(TestCase):
+    def test_panel_publico_no_expone_clientes(self):
+        Cliente.objects.create(nombre='Privado', apellido='Reservado')
+        respuesta = self.client.get('/')
+        self.assertNotContains(respuesta, 'Privado')
+        self.assertNotIn('total_clientes', respuesta.context)
+
+    def test_panel_y_busqueda_autenticada(self):
+        self.client.force_login(User.objects.create_user(username='panel'))
+        Cliente.objects.create(nombre='Lucia', apellido='Prueba', correo='lucia@example.com')
+        Cliente.objects.create(nombre='Mario', apellido='Otro', telefono='12345')
+        respuesta = self.client.get('/')
+        self.assertEqual(respuesta.context['total_clientes'], 2)
+        self.assertContains(respuesta, 'Lucia Prueba')
+        for consulta in ['lucia', 'Prueba', 'lucia@example.com']:
+            resultado = self.client.get('/clientes/', {'q': consulta})
+            self.assertContains(resultado, 'Lucia Prueba')
+            self.assertNotContains(resultado, 'Mario Otro')
+        self.assertContains(self.client.get('/clientes/', {'q': '12345'}), 'Mario Otro')
+        self.assertContains(self.client.get('/clientes/', {'q': 'inexistente'}), 'No encontramos coincidencias')
+
+
 class FlujoClientesTests(TestCase):
     def test_acceso_restringido(self):
         for url in ['/clientes/', '/clientes/crear/',

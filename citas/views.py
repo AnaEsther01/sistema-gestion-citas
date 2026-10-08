@@ -4,7 +4,9 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Cliente
+from django.db.models import Q
+from django.utils import timezone
+from .models import Cliente, Cita, Servicio
 from .forms import ClienteForm
 
 def registro(request):
@@ -46,13 +48,33 @@ def cerrar_sesion(request):
     return redirect('inicio')
 
 def inicio(request):
-    return render(request, 'citas/inicio.html')
+    contexto = {}
+    # El panel muestra datos reales solo después de iniciar sesión.
+    if request.user.is_authenticated:
+        hoy = timezone.localdate()
+        contexto = {
+            'total_clientes': Cliente.objects.count(),
+            'citas_hoy': Cita.objects.filter(fecha=hoy).count(),
+            'total_servicios': Servicio.objects.count(),
+            'ultimos_clientes': Cliente.objects.order_by('-pk')[:4],
+            'proximas_citas': Cita.objects.filter(fecha__gte=hoy)
+                .select_related('cliente', 'servicio', 'estado')
+                .order_by('fecha', 'hora')[:4],
+        }
+    return render(request, 'citas/inicio.html', contexto)
 
 
 @login_required(login_url='login')
 def clientes(request):
-    lista_clientes = Cliente.objects.all()
+    busqueda = request.GET.get('q', '').strip()[:150]
+    lista_clientes = Cliente.objects.order_by('nombre', 'apellido', 'pk')
+    if busqueda:
+        lista_clientes = lista_clientes.filter(
+            Q(nombre__icontains=busqueda) | Q(apellido__icontains=busqueda)
+            | Q(correo__icontains=busqueda) | Q(telefono__icontains=busqueda))
     return render(request, 'citas/clientes.html', {
+        'busqueda': busqueda,
+        'total_clientes': Cliente.objects.count(),
         'clientes': lista_clientes
     })
 
